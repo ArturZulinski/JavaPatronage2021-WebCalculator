@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.Vector;
 
 @RestController
@@ -73,25 +74,11 @@ public class CalculatorController {
         return calculatorService.mul(number, vector);
     }
 
-//    @PostMapping("/operations/mul/number-matrix")
-//    @ApiOperation("Multiplication of matrix and number")
-//    public Array<Double> mul(@RequestParam double firstNumber, @RequestParam double secondMatrix[][]){
-//        Vector<Double> result = new Vector<Double>();
-//        if(secondMatrix.length < 5){
-//            for (int i = 0; i < secondMatrix.length; i++) {
-//                for(int j=0; j< secondMatrix[0].length;j++){
-//                        result.addElement(firstNumber*secondMatrix[i][j]);
-//                }
-//
-//            }
-//        }
-//        else{
-//            throw new RuntimeException("The value of Vector is to big!");
-//        }
-//        return result[][];
-//    }
-
-        //@DeleteMapping
+    @PostMapping("/operations/mul/number-matrix")
+    @ApiOperation("Multiplication of matrix and number")
+    public ResponseEntity<Vector<Vector<Double>>> mul(@RequestParam double number, @RequestParam double matrix[][]){
+        return calculatorService.mul(number,matrix); ////////////////////////////////////////////////
+    }
 
     @PostMapping("/operations/add/vector-vector")
     @ApiOperation("Adding 2 vectors together")

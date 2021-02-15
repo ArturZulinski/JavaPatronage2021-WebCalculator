@@ -1,7 +1,9 @@
 package com.patronage.calculator.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -10,9 +12,11 @@ import java.util.Vector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class CalculatorServiceTest {
 
-    private final CalculatorService calculatorService = new CalculatorService();
+    @Autowired
+    private CalculatorService calculatorService;
 
     @Test
     void shouldAddTwoNumbers() {
@@ -35,7 +39,7 @@ class CalculatorServiceTest {
     }
 
     @Test
-    void shouldntMultiplyNumbrAndVector() {
+    void shouldNotMultiplyNumberAndVector() {
         double[] inputVector = new double[]{1.0 ,3.0,5.0, 4.0, 8.0};
         ResponseEntity<Vector<Double>> result = calculatorService.mul(2.0, inputVector);
 
