@@ -15,6 +15,7 @@ Do uruchomienia aplikacji potrzebne są:
 W programie InteliJ importujemy projekt. Następnie uruchamiamy opcję Run, która również jest odpowiedzialna za build'owanie aplikacji.
 
 ##Funkcje matematyczne
+
 Program wykonuje następujące funkcje matematyczne:
 - Wybierając 2 liczby rzeczywiste użytkownik może:
     -   Dodać je do siebie
@@ -35,6 +36,7 @@ Program wykonuje następujące funkcje matematyczne:
 - Wybierając macierz oraz wektor użytkownik może pomnożyć je ze sobą
 
 ##Funkcje dodatkowe
+
 Program zapisuje również historię wykonywanych operacji w plikach tekstowych (operation_history.txt).
 Kiedy ilość operacji przeroczy *** bajtów, program archiwizuje plik z adnotacją numeryczn i nadpisuje dalej wcześniejszy plik.
 Użytkownik ma również możliwość:
@@ -44,4 +46,5 @@ Użytkownik ma również możliwość:
 - Usunięcia wszystkich plików historii opeacji
 
 ## Autor
+
 Artur Żuliński

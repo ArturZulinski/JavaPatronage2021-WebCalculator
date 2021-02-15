@@ -45,10 +45,16 @@ public class CalculatorService{
         return result;
     }
 
-    public double div(double firstNumber, double secondNumber){
+    public ResponseEntity<Double> div(double firstNumber, double secondNumber){
         double result = firstNumber / secondNumber;
-        logger.info("Dividing {} by {} gives {}",firstNumber,secondNumber,result);
-        return result;
+        if(secondNumber==0){
+            logger.info("You cannot divide by 0 !!!");
+            return new ResponseEntity("You cannot divide by 0 !!!", HttpStatus.BAD_REQUEST);
+        }
+        else {
+            logger.info("Dividing {} by {} gives {}", firstNumber, secondNumber, result);
+            return new ResponseEntity(result, HttpStatus.OK);
+        }
     }
 
     public double exp(double firstNumber, double secondNumber){
@@ -57,19 +63,23 @@ public class CalculatorService{
         return result;
     }
 
-    public double root(double firstNumber, double secondNumber){
+    public ResponseEntity<Double> root(double firstNumber, double secondNumber){
         double result = Math.pow(firstNumber,(1/secondNumber));
-        logger.info("{} root of {} equals {}",secondNumber,firstNumber,result);
-        return result;
+        if(secondNumber==0){
+            logger.info("You cannot root by 0 !!!");
+            return new ResponseEntity("You cannot root by 0 !!!", HttpStatus.BAD_REQUEST);
+        }
+        else{
+            logger.info("{} root of {} equals {}",secondNumber,firstNumber,result);
+            return new ResponseEntity(result, HttpStatus.OK);
+        }
     }
 
     public ResponseEntity<Vector<Double>> mul(double number, double vector[]){
         Vector<Double> result = new Vector<Double>();
-        System.out.println("vector = " + vectorMaxLength);
-        System.out.println("vector = " + vector.length);
         if(vector.length <= vectorMaxLength){
             for (int i = 0; i < vector.length; i++) {
-                    result.addElement(number*vector[i]);
+                    result.addElement(number * vector[i]);
             }
         }
         else{
@@ -82,20 +92,21 @@ public class CalculatorService{
 
     public ResponseEntity<Vector<Double>> add(double firstVector[], double secondVector[]){
         Vector<Double> result = new Vector<Double>();
-        if((firstVector.length < 5) && (secondVector.length < 5) && (firstVector.length==secondVector.length)){ // both vector cannot be bigger then 4 and the same size
+        if((firstVector.length <= vectorMaxLength) && (secondVector.length <= vectorMaxLength) &&
+                (firstVector.length==secondVector.length)){
             for(int i =0; i <firstVector.length; i++) {
-                result.addElement(firstVector[i]+secondVector[i]);
+                result.addElement(firstVector[i] + secondVector[i]);
             }
         }
-        else if(firstVector.length!=secondVector.length){
+        else if(firstVector.length != secondVector.length){
             logger.error("The Vectors are different sizes!");
             return new ResponseEntity("The Vectors are different sizes!", HttpStatus.BAD_REQUEST);
         }
-        else if (firstVector.length >= 5){
+        else if (firstVector.length > vectorMaxLength){
             logger.error("The first Vector is too big!");
             return new ResponseEntity("The first Vector is too big!", HttpStatus.BAD_REQUEST);
         }
-        else if (secondVector.length >= 5){
+        else if (secondVector.length > vectorMaxLength){
             logger.error("The second Vector is too big!");
             return new ResponseEntity("The second Vector is too big!", HttpStatus.BAD_REQUEST);
         }
@@ -105,20 +116,21 @@ public class CalculatorService{
 
     public ResponseEntity<Vector<Double>> sub(double firstVector[], double secondVector[]){
         Vector<Double> result = new Vector<Double>();
-        if((firstVector.length <=4 ) && (secondVector.length < 5) && (firstVector.length==secondVector.length)){ // both vector cannot be bigger then 4 and the same size
-            for(int i =0; i <firstVector.length; i++) {
+        if((firstVector.length <= vectorMaxLength ) && (secondVector.length <= vectorMaxLength) &&
+                (firstVector.length == secondVector.length)){
+            for(int i =0; i < firstVector.length; i++) {
                 result.addElement(firstVector[i] - secondVector[i]);
             }
         }
-        else if(firstVector.length!=secondVector.length){
+        else if(firstVector.length != secondVector.length){
             logger.error("The Vectors are different sizes!");
             return new ResponseEntity("The Vectors are different sizes!", HttpStatus.BAD_REQUEST);
         }
-        else if (firstVector.length >= 5){
+        else if (firstVector.length > vectorMaxLength){
             logger.error("The first Vector is too big!");
             return new ResponseEntity("The first Vector is too big!", HttpStatus.BAD_REQUEST);
         }
-        else if (secondVector.length >= 5){
+        else if (secondVector.length > vectorMaxLength){
             logger.error("The second Vector is too big!");
             return new ResponseEntity("The second Vector is too big!", HttpStatus.BAD_REQUEST);
         }
@@ -126,49 +138,66 @@ public class CalculatorService{
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    public ResponseEntity<Vector<Vector<Double>>> mul(double number, double matrix[][]){
-        Vector<Vector<Double>> result = new Vector<Vector<Double>>();
-        Vector<Double> inside = new Vector<Double>();
-        if(matrix.length <= matrixMaxCol){
-            for(int i=0; i<matrix.length; i++){
-                for(int j=0; j<matrix[0].length;j++){
-                    inside.addElement(number * matrix[i][j]);
+    //Works only good on paper. Have some problem inputting it in browser API
+    public ResponseEntity<Vector<Vector<Double>>> mul(double number, double matrix[][]) {
+        if((matrix.length <= matrixMaxCol) && (matrix[0].length <= matrixMaxRow)){
+            for (int r = 0; r < matrix.length; r++) {
+                for (int c = 0; c < matrix[0].length; c++) {
+                        System.out.printf(" " + (number * matrix[r][c]) + "\t");
+                        matrix[r][c] = matrix[r][c] * number;
                 }
-                result.addElement(inside);
+                System.out.println();
             }
+            logger.info("You successfully multiply matrix by number");
+            return new ResponseEntity(matrix, HttpStatus.OK);
         }
-        logger.info("Everything went smooth");
-        return new ResponseEntity(result,HttpStatus.OK);
+        else{
+            logger.info("Either row or column of the matrix is to big!");
+            return new ResponseEntity("Either row or column of the matrix is to big!", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    double[][] firstMatrix = {
-            new double[]{1d, 5d},
-            new double[]{2d, 3d},
-            new double[]{1d, 7d}
-    };
-
-    double[][] secondMatrix = {
-            new double[]{1d, 2d, 3d, 7d},
-            new double[]{5d, 2d, 8d, 1d}
-    };
-    double[][] multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
-        double[][] result = new double[firstMatrix.length][secondMatrix[0].length];
-
-        for (int row = 0; row < result.length; row++) {
-            for (int col = 0; col < result[row].length; col++) {
-                result[row][col] = multiplyMatricesCell(firstMatrix, secondMatrix, row, col);
+    //Works only good on paper. Have some problem inputting it in browser API
+    public ResponseEntity<Vector<Vector<Double>>> sum(double firstMatrix[][], double secondMatrix[][]) {
+        if((secondMatrix.length <= matrixMaxCol) && (secondMatrix[0].length <= matrixMaxRow) &&
+                (firstMatrix.length <= matrixMaxCol) && (firstMatrix[0].length <= matrixMaxRow)){
+            for (int r = 0; r < secondMatrix.length; r++) {
+                for (int c = 0; c < secondMatrix[0].length; c++) {
+                    System.out.printf(" " + (firstMatrix[r][c] + secondMatrix[r][c]) + "\t");
+                    secondMatrix[r][c] = secondMatrix[r][c] + firstMatrix[r][c];
+                }
+                System.out.println();
             }
+            logger.info("You successfully add 2 matrices");
+            return new ResponseEntity(secondMatrix, HttpStatus.OK);
         }
+        else{
+            logger.info("Either row or column of one of the matrices is to big!");
+            return new ResponseEntity("Either row or column of the matrix is to big!", HttpStatus.BAD_REQUEST);
+        }
+    }
 
-        return result;
-    }
-    double multiplyMatricesCell(double[][] firstMatrix, double[][] secondMatrix, int row, int col) {
-        double cell = 0;
-        for (int i = 0; i < secondMatrix.length; i++) {
-            cell += firstMatrix[row][i] * secondMatrix[i][col];
+    //Works only good on paper. Have some problem inputting it in browser API
+    public ResponseEntity<Vector<Vector<Double>>> sub(double firstMatrix[][], double secondMatrix[][]) {
+        if((secondMatrix.length <= matrixMaxCol) && (secondMatrix[0].length <= matrixMaxRow) &&
+                (firstMatrix.length <= matrixMaxCol) && (firstMatrix[0].length <= matrixMaxRow)){
+            for (int r = 0; r < secondMatrix.length; r++) {
+                for (int c = 0; c < secondMatrix[0].length; c++) {
+                    System.out.printf(" " + (firstMatrix[r][c] - secondMatrix[r][c]) + "\t");
+                    secondMatrix[r][c] = secondMatrix[r][c] - firstMatrix[r][c];
+                }
+                System.out.println();
+            }
+            logger.info("You successfully subtract 2 matrices");
+            return new ResponseEntity(secondMatrix, HttpStatus.OK);
         }
-        return cell;
+        else{
+            logger.info("Either row or column of one of the matrices is to big!");
+            return new ResponseEntity("Either row or column of the matrix is to big!", HttpStatus.BAD_REQUEST);
+        }
     }
+
+    //Multiplying matrix - matrix and matrix - vector not implemented. In future updates
 
     public ResponseEntity downloadFileFromLocal() {
         Path path = Paths.get("src\\main\\resources\\operations.txt");

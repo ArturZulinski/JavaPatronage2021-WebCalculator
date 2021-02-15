@@ -4,20 +4,10 @@ import com.patronage.calculator.service.HistoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -53,7 +43,7 @@ public class HistoryController {
     }
 
     @GetMapping("/read/history")
-    @ApiOperation("Read history file")
+    @ApiOperation("Read {fileName} history file")
     public List<String> readHistoryLog(@RequestParam String fileName) throws IOException {
         return historyService.readHistoryLog(fileName);
     }

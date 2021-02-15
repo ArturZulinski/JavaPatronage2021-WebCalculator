@@ -3,23 +3,10 @@ package com.patronage.calculator.controler;
 import com.patronage.calculator.service.CalculatorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.Vector;
 
 @RestController
@@ -51,7 +38,7 @@ public class CalculatorController {
 
     @PostMapping("/operations/div/number-number")
     @ApiOperation("Division of 2 Real Numbers")
-    public double div(@RequestParam double firstNumber, @RequestParam double secondNumber) {
+    public ResponseEntity<Double> div(@RequestParam double firstNumber, @RequestParam double secondNumber) {
         return calculatorService.div(firstNumber,secondNumber);
     }
 
@@ -63,7 +50,7 @@ public class CalculatorController {
 
     @PostMapping(value = "/operations/root/number-number", produces = {"application/json"})
     @ApiOperation("Root of 2 Real Numbers")
-    public double root(@RequestParam double firstNumber, @RequestParam double secondNumber) {
+    public ResponseEntity<Double> root(@RequestParam double firstNumber, @RequestParam double secondNumber) {
         return calculatorService.root(firstNumber,secondNumber);
     }
 
@@ -77,9 +64,20 @@ public class CalculatorController {
     @PostMapping("/operations/mul/number-matrix")
     @ApiOperation("Multiplication of matrix and number")
     public ResponseEntity<Vector<Vector<Double>>> mul(@RequestParam double number, @RequestParam double matrix[][]){
-        return calculatorService.mul(number,matrix); ////////////////////////////////////////////////
+        return calculatorService.mul(number,matrix);
     }
 
+    @PostMapping("/operations/sum/matrix-matrix")
+    @ApiOperation("Adding 2 matrices")
+    public ResponseEntity<Vector<Vector<Double>>> sum(@RequestParam double firstMatrix[][], @RequestParam double secondMatrix[][]){
+        return calculatorService.sum(firstMatrix,secondMatrix);
+    }
+
+    @PostMapping("/operations/sub/matrix-matrix")
+    @ApiOperation("Subtraction of 2 matrices")
+    public ResponseEntity<Vector<Vector<Double>>> sub(@RequestParam double firstMatrix[][], @RequestParam double secondMatrix[][]){
+        return calculatorService.sub(firstMatrix,secondMatrix);
+    }
     @PostMapping("/operations/add/vector-vector")
     @ApiOperation("Adding 2 vectors together")
     public ResponseEntity<Vector<Double>> add(@RequestParam double firstVector[],@RequestParam double secondVector[]){

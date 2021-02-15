@@ -2,7 +2,6 @@ package com.patronage.calculator.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -67,6 +66,7 @@ public class HistoryService {
                 }
             }
         }
+        logger.info("All files deleted");
     }
 
     public List<String> readCurrentLog() throws IOException {
@@ -74,6 +74,7 @@ public class HistoryService {
 
         List<String> strings = Files.readAllLines(historyPath);
 
+        logger.info("Reading file with current operations");
         return strings;
     }
 
@@ -81,6 +82,7 @@ public class HistoryService {
         Path path = Paths.get("logs\\" + fileName + ".txt");
         List<String> strings = Files.readAllLines(path);
 
+        logger.info("Reading {} file with old operations", path);
         return strings;
     }
 }
