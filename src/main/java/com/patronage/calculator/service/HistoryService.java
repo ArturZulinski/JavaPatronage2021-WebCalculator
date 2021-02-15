@@ -1,6 +1,7 @@
 package com.patronage.calculator.service;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,10 +23,10 @@ import java.util.List;
 @Component
 public class HistoryService {
 
-    Logger logger = LoggerFactory.getLogger(HistoryService.class);
+    private static final Logger logger = LogManager.getLogger(HistoryService.class);
 
     public ResponseEntity downloadFileFromLocal(@RequestParam String fileName) {
-        Path path = Paths.get("logs\\history\\" + fileName + ".txt");
+        Path path = Paths.get("logs\\" + fileName + ".txt");
         Resource resource = null;
         try {
             resource = new UrlResource(path.toUri());
@@ -40,7 +41,7 @@ public class HistoryService {
     }
 
     public List<String> downloadListFromLocal() throws IOException {
-        Path historyPath = Paths.get("logs\\history\\");
+        Path historyPath = Paths.get("logs\\");
 
         List<String> fileList = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(historyPath)) {
@@ -56,17 +57,30 @@ public class HistoryService {
     }
 
     public void deleteFileFromLocal() throws IOException {
-        Path historyPath = Paths.get("logs\\history\\");
+        Path historyPath = Paths.get("logs\\");
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(historyPath)) {
             for (Path path : stream) {
-                if (!Files.isDirectory(path)) {
-                    System.out.println("deleting file path = " + path);
-                    logger.info("All history files deleted!");
+                if(!Files.isDirectory(path) && !("operation_history.txt".equals(path.getFileName().toString()))){
+                    logger.info("The {} history file  deleted!",path);
                     Files.deleteIfExists(path);
                 }
             }
         }
     }
 
+    public List<String> readCurrentLog() throws IOException {
+        Path historyPath = Paths.get("logs\\operation_history.txt");
+
+        List<String> strings = Files.readAllLines(historyPath);
+
+        return strings;
+    }
+
+    public List<String> readHistoryLog(String fileName) throws IOException {
+        Path path = Paths.get("logs\\" + fileName + ".txt");
+        List<String> strings = Files.readAllLines(path);
+
+        return strings;
+    }
 }

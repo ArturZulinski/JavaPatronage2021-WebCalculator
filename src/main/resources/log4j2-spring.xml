@@ -8,14 +8,14 @@
 
         <RollingFile name="RollingFile"
                      fileName="./logs/operation_history.txt"
-                     filePattern="./logs/history/operation_history_%i.txt">
+                     filePattern="./logs/operation_history_%d_%i.txt">
             <PatternLayout>
                 <pattern>%m%n</pattern>
             </PatternLayout>
             <Policies>
                 <OnStartupTriggeringPolicy />
                 <SizeBasedTriggeringPolicy
-                        size="10 MB" />
+                        size="2 KB" />
                 <TimeBasedTriggeringPolicy />
             </Policies>
         </RollingFile>
@@ -23,16 +23,12 @@
 
     <Loggers>
         <!-- LOG everything at INFO level -->
-        <Root level="INFO">
+        <Root level="info">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
         </Root>
 
-        <!-- LOG "com.patronage.calculator*" at TRACE level -->
-        <Logger name="com.patronage.calculator" level="trace" additivity="false">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
-        </Logger>
+        <Logger name="com.patronage.calculator" level="trace"></Logger>
     </Loggers>
 
 </Configuration>

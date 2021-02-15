@@ -1,19 +1,14 @@
 package com.patronage.calculator.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -24,7 +19,7 @@ import java.util.Vector;
 @Service
 public class CalculatorService{
 
-    private static final Logger logger = LoggerFactory.getLogger("com.patronage.calculator");
+    private static final Logger logger = LogManager.getLogger(CalculatorService.class);
     @Value("${matrix.max.col}")
     private int matrixMaxCol;
     @Value("${matrix.max.row}")

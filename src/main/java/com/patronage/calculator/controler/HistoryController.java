@@ -34,15 +34,27 @@ public class HistoryController {
         return historyService.downloadFileFromLocal(fileName);
     }
 
-    @GetMapping("/history/list")
+    @GetMapping("/list")
     @ApiOperation("Downloading the list of history files")
     public List<String> downloadListFromLocal() throws IOException {
         return historyService.downloadListFromLocal();
     }
 
-    @DeleteMapping("/history/delete/list")
+    @DeleteMapping("/delete/list")
     @ApiOperation("Clearing all history files")
     public void deleteFileFromLocal() throws IOException {
         historyService.deleteFileFromLocal();
+    }
+
+    @GetMapping("/read/current")
+    @ApiOperation("Read current file")
+    public List<String> readCurrentLog() throws IOException {
+        return historyService.readCurrentLog();
+    }
+
+    @GetMapping("/read/history")
+    @ApiOperation("Read history file")
+    public List<String> readHistoryLog(@RequestParam String fileName) throws IOException {
+        return historyService.readHistoryLog(fileName);
     }
 }
