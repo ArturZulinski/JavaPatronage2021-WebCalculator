@@ -11,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 public class WebConfiguration extends WebMvcConfigurerAdapter {
 
-
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer.favorPathExtension(true)

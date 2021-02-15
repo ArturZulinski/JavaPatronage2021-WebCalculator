@@ -3,6 +3,8 @@ package com.patronage.calculator.controler;
 import com.patronage.calculator.service.CalculatorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,49 +25,50 @@ import java.util.Vector;
 @RequestMapping("/calculator")
 @Api("This application let User to do simple calculations like addition, subtraction and others, on real numbers, vectors and " +
         "matrices depending on the configurations of the two.")
-public class CalculatorControler {
+public class CalculatorController {
 
     @Autowired
     private CalculatorService calculatorService;
 
     @PostMapping("/operations/sum/number-number")
     @ApiOperation("Addition of 2 real numbers")
-    public int sum(@RequestParam int firstNumber, @RequestParam int secondNumber) {
+    public double sum(@RequestParam double firstNumber, @RequestParam double secondNumber) {
         return calculatorService.sum(firstNumber, secondNumber);
     }
 
     @PostMapping("/operations/sub/number-number")
     @ApiOperation("Subtraction of 2 Real Numbers")
-    public int sub(@RequestParam int firstNumber, @RequestParam int secondNumber) {
-        return (firstNumber - secondNumber);
+    public double sub(@RequestParam double firstNumber, @RequestParam double secondNumber) {
+        return calculatorService.sub(firstNumber,secondNumber);
     }
 
     @PostMapping("/operations/mul/number-number")
     @ApiOperation("Multiplication of 2 Real Numbers")
-    public int mul(@RequestParam int firstNumber, @RequestParam int secondNumber) {
-        return (firstNumber * secondNumber);
+    public double mul(@RequestParam double firstNumber, @RequestParam double secondNumber) {
+        return calculatorService.mul(firstNumber,secondNumber);
     }
 
     @PostMapping("/operations/div/number-number")
     @ApiOperation("Division of 2 Real Numbers")
-    public int div(@RequestParam int firstNumber, @RequestParam int secondNumber) {
-        return (firstNumber / secondNumber);
+    public double div(@RequestParam double firstNumber, @RequestParam double secondNumber) {
+        return calculatorService.div(firstNumber,secondNumber);
     }
 
     @PostMapping("/operations/exp/number-number")
     @ApiOperation("Exponentiation of 2 Real Numbers")
     public double exp(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return (Math.pow(firstNumber, secondNumber));
+        return calculatorService.exp(firstNumber,secondNumber);
     }
 
     @PostMapping(value = "/operations/root/number-number", produces = {"application/json"})
     @ApiOperation("Root of 2 Real Numbers")
     public double root(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return (Math.pow(firstNumber, (1 / secondNumber)));
+        return calculatorService.root(firstNumber,secondNumber);
     }
 
     @PostMapping(value = "/operations/mul/number-vector", produces = {"application/json"})
-    @ApiOperation(value = "Multiplication of vector and number", notes = "bjbkhjajdghgdhsfhds")
+    @ApiOperation(value = "Multiplication of vector and number", notes = "This operation take 1 Real Number and 1 Vector " +
+            "and multiply them together") // adding some extra notes
     public ResponseEntity<Vector<Double>> mul(@RequestParam double number, @RequestParam double vector[]) {
         return calculatorService.mul(number, vector);
     }
@@ -88,38 +91,23 @@ public class CalculatorControler {
 //        return result[][];
 //    }
 
-    @PostMapping(value = "/operations/test", produces = {"application/json"})
-    @ApiOperation("TEST")
-    public Integer[][] testing(Integer[][] arr) {
-        System.out.println("array test" + Arrays.toString(arr));
-        return arr;
-//        Integer[][] newArr=new Integer[arr.length][arr[0].length];
-//        for(int i=0;i<arr.length;i++)
-//        {
-//            for(int j=0;j<arr[0].length;j++)
-//            {
-//                newArr[i][j]=arr[i][arr[0].length-1-j];
-//            }
-//
-//        }
-//        return newArr; // rerunning the array witch created inside this method.
-//    }
-
         //@DeleteMapping
+
+    @PostMapping("/operations/add/vector-vector")
+    @ApiOperation("Adding 2 vectors together")
+    public ResponseEntity<Vector<Double>> add(@RequestParam double firstVector[],@RequestParam double secondVector[]){
+        return calculatorService.add(firstVector,secondVector);
+    }
+
+    @PostMapping("/operations/sub/vector-vector")
+    @ApiOperation("Subtraction of 2 vectors")
+    public ResponseEntity<Vector<Double>> sub(@RequestParam double firstVector[],@RequestParam double secondVector[]){
+        return calculatorService.sub(firstVector,secondVector);
     }
 
     @GetMapping("/operations/instruction/")
+    @ApiOperation("Downloading file 'operations.txt' containing all possible operations with given variables")
     public ResponseEntity downloadFileFromLocal() {
-        Path path = Paths.get("src\\main\\resources\\operations.txt");
-        Resource resource = null;
-        try {
-            resource = new UrlResource(path.toUri());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+        return calculatorService.downloadFileFromLocal();
     }
 }

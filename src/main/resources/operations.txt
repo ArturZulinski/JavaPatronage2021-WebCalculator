@@ -1,0 +1,37 @@
+If You choose 2 Real Numbers, You can:
+	- add them      ( x + y )
+	- subtract them ( x - y )
+	- multiply them ( x * y )
+	- divide them   ( x / y )
+	- power them    ( x ^ y )
+	- root them     ( x ^ (1/y) )
+
+If You choose Real Number and Vector, You only can:
+    - multiply them (x * { y,z,a,b } )
+
+If You choose Real Number and Matrix, You only can:
+                    (     |a,b,c| )
+    -multiply them  ( x * |d,e,f| )
+                    (     |g,h,i| )
+
+If You choose 2 Vectors, You can:
+    - add them      ( {x,y,z} + {a,b,c} )
+    - subtract them ( {x,y,z} - {a,b,c} )
+
+If You choose 2 Matrices, You can:
+                    ( |a1,b1,c1|   |a,b,c| )
+    -add them       ( |d1,e1,f1| + |d,e,f| )
+                    ( |g1,h1,i1|   |g,h,i| )
+
+                    ( |a1,b1,c1|   |a,b,c| )
+    -subtract them  ( |d1,e1,f1| - |d,e,f| )
+                    ( |g1,h1,i1|   |g,h,i| )
+
+                    ( |a1,b1,c1|   |a,b,c| )
+    -multiply them  ( |d1,e1,f1| * |d,e,f| )
+                    ( |g1,h1,i1|   |g,h,i| )
+
+If You choose Vector and Matrix, You only can:
+                    (            |a,b,c| )
+    -multiply them  ( {x,y,z} *  |d,e,f| )
+                    (            |g,h,i| )
