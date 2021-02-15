@@ -24,7 +24,7 @@ import java.util.Vector;
 @Service
 public class CalculatorService{
 
-    Logger logger = LoggerFactory.getLogger(CalculatorService.class);
+    private static final Logger logger = LoggerFactory.getLogger("com.patronage.calculator");
     @Value("${matrix.max.col}")
     private int matrixMaxCol;
     @Value("${matrix.max.row}")

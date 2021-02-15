@@ -25,7 +25,7 @@ public class HistoryService {
     Logger logger = LoggerFactory.getLogger(HistoryService.class);
 
     public ResponseEntity downloadFileFromLocal(@RequestParam String fileName) {
-        Path path = Paths.get("src\\main\\resources\\history\\" + fileName + ".txt");
+        Path path = Paths.get("logs\\history\\" + fileName + ".txt");
         Resource resource = null;
         try {
             resource = new UrlResource(path.toUri());
@@ -40,7 +40,7 @@ public class HistoryService {
     }
 
     public List<String> downloadListFromLocal() throws IOException {
-        Path historyPath = Paths.get("src\\main\\resources\\history\\");
+        Path historyPath = Paths.get("logs\\history\\");
 
         List<String> fileList = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(historyPath)) {
@@ -56,9 +56,8 @@ public class HistoryService {
     }
 
     public void deleteFileFromLocal() throws IOException {
-        Path historyPath = Paths.get("src\\main\\resources\\history\\");
+        Path historyPath = Paths.get("logs\\history\\");
 
-        List<String> fileList = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(historyPath)) {
             for (Path path : stream) {
                 if (!Files.isDirectory(path)) {

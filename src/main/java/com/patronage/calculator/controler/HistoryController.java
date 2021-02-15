@@ -43,5 +43,6 @@ public class HistoryController {
     @DeleteMapping("/history/delete/list")
     @ApiOperation("Clearing all history files")
     public void deleteFileFromLocal() throws IOException {
+        historyService.deleteFileFromLocal();
     }
 }
