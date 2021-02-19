@@ -1,0 +1,5 @@
+CREATE TABLE history (
+  id INT AUTO_INCREMENT  PRIMARY KEY,
+  time_stamp TIMESTAMP NOT NULL,
+  logger VARCHAR(250) NOT NULL
+);

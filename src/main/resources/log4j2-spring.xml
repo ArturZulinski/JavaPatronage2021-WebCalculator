@@ -10,7 +10,7 @@
                      fileName="./logs/operation_history.txt"
                      filePattern="./logs/operation_history_%d_%i.txt">
             <PatternLayout>
-                <pattern>%m%n</pattern>
+                <pattern>%d %m%n</pattern>
             </PatternLayout>
             <Policies>
                 <OnStartupTriggeringPolicy />
@@ -25,10 +25,12 @@
         <!-- LOG everything at INFO level -->
         <Root level="info">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
+<!--            <AppenderRef ref="RollingFile" />-->
         </Root>
 
-        <Logger name="com.patronage.calculator" level="trace"></Logger>
+        <Logger name="toFile" level="info">
+            <AppenderRef ref="RollingFile" />
+        </Logger>
     </Loggers>
 
 </Configuration>

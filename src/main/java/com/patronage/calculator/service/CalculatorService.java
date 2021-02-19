@@ -2,7 +2,9 @@ package com.patronage.calculator.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.Vector;
 
 @Service
@@ -27,9 +30,15 @@ public class CalculatorService{
     @Value("${vector.max.length}")
     private int vectorMaxLength;
 
+    @Autowired
+    private HistoryInterface historyInterface;
+
     public double sum(double firstNumber, double secondNumber) {
         double result = firstNumber + secondNumber;
-        logger.info("Perform adding operation {} + {} = {}",firstNumber,secondNumber,result);
+        String message = MessageFormat
+                .format("Perform adding operation {} + {} = {}", firstNumber, secondNumber, result);
+        historyInterface.saveHistory(message); //toFile or database
+        logger.info(message); // console
         return result;
     }
 
