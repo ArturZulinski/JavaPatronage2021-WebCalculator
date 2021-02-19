@@ -15,7 +15,7 @@
             <Policies>
                 <OnStartupTriggeringPolicy />
                 <SizeBasedTriggeringPolicy
-                        size="2 KB" />
+                        size="5 KB" />
                 <TimeBasedTriggeringPolicy />
             </Policies>
         </RollingFile>

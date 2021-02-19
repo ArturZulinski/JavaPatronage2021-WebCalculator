@@ -95,4 +95,5 @@ public class CalculatorController {
     public ResponseEntity downloadFileFromLocal() {
         return calculatorService.downloadFileFromLocal();
     }
+
 }
