@@ -2,12 +2,14 @@ package com.patronage.calculator.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
@@ -19,12 +21,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class HistoryService {
+@Service
+public class HistoryService{
+
+    @Autowired
+    private HistoryInterface historyInterface;
 
     private static final Logger logger = LogManager.getLogger(HistoryService.class);
 
-    public ResponseEntity downloadFileFromLocal(@RequestParam String fileName) {
+    public ResponseEntity downloadFileFromLocal(String fileName) {
         Path path = Paths.get("logs\\" + fileName + ".txt");
         Resource resource = null;
         try {
@@ -84,5 +89,9 @@ public class HistoryService {
 
         logger.info("Reading {} file with old operations", path);
         return strings;
+    }
+
+    public List<String> readHistory(String fromDate, String toDate) throws IOException {
+                return historyInterface.readHistory(fromDate, toDate);
     }
 }

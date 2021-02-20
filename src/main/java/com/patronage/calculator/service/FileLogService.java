@@ -4,18 +4,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@ConditionalOnProperty(name = "H2_HISTORY_ENABLE", value = "false", matchIfMissing = true)
-@Component
+//@Component
+@Service
+@ConditionalOnProperty(prefix = "",name = "H2_HISTORY_ENABLE", havingValue = "false", matchIfMissing = true)
 public class FileLogService implements HistoryInterface{
 
     private static final Logger logger = LogManager.getLogger("toFile");
@@ -26,16 +28,26 @@ public class FileLogService implements HistoryInterface{
     }
 
     @Override
-    public List<String> readHistory(LocalDateTime fromDate, LocalDateTime toDate) throws IOException {
+    public List<String> readHistory(String fromDate, String toDate) throws IOException {
         Path path = Paths.get("logs\\operation_history.txt");
         List<String> strings = Files.readAllLines(path);
         List<String> output = new ArrayList<>();
 
         for(int i=0 ; i < strings.size() ; i++){
             String currentLine = strings.get(i);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String actualDate = currentLine.substring(0,19);
-            LocalDateTime actualDateTime = LocalDateTime.parse(actualDate);
-            if((actualDateTime.isAfter(fromDate)) && ((toDate == null) || (actualDateTime.isBefore(toDate)))){
+            LocalDateTime actualDateTime = LocalDateTime.parse(actualDate,formatter);
+            LocalDateTime begin = LocalDateTime.parse(fromDate,formatter);
+            LocalDateTime end;
+            if(toDate!=null){
+                end = LocalDateTime.parse(toDate,formatter);
+            }
+            else {
+                end = LocalDateTime.now();
+            }
+
+            if((actualDateTime.isAfter(begin)) && ((end == null) || (actualDateTime.isBefore(end)))){
                 output.add(currentLine);
             }
         }

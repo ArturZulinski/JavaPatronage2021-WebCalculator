@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Vector;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -182,4 +184,15 @@ class CalculatorServiceTest {
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
+
+    @Test
+    void bbbba(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String currentLine = "2021-02-19 20:40:19,551 2.0 to power 2.0 equals 4.0";
+        String actualDate = currentLine.substring(0,19);
+        LocalDateTime actualDateTime = LocalDateTime.parse(actualDate,formatter);
+        System.out.println("actualDateTime = " + actualDateTime);
+        System.out.println("actualDate = " + actualDate);
+    }
+
 }

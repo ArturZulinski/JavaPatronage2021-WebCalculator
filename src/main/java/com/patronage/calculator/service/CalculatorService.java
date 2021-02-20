@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -35,8 +34,7 @@ public class CalculatorService{
 
     public double sum(double firstNumber, double secondNumber) {
         double result = firstNumber + secondNumber;
-        String message = MessageFormat
-                .format("Perform adding operation {} + {} = {}", firstNumber, secondNumber, result);
+        String message = String.format("Perform adding operation %.2f + %.2f = %.2f", firstNumber, secondNumber, result);
         historyInterface.saveHistory(message); //toFile or database
         logger.info(message); // console
         return result;

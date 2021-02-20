@@ -1,13 +1,16 @@
 package com.patronage.calculator.controler;
 
+import com.patronage.calculator.service.FileLogService;
 import com.patronage.calculator.service.HistoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -42,9 +45,16 @@ public class HistoryController {
         return historyService.readCurrentLog();
     }
 
-    @GetMapping("/read/history")
-    @ApiOperation("Read {fileName} history file")
-    public List<String> readHistoryLog(@RequestParam String fileName) throws IOException {
-        return historyService.readHistoryLog(fileName);
+//    @GetMapping("/read/history")
+//    @ApiOperation("Read {fileName} history file")
+//    public List<String> readHistoryLog(@RequestParam String fileName) throws IOException {
+//        return historyService.readHistoryLog(fileName);
+//    }
+
+    @GetMapping("read/history")
+    @ApiOperation("Read current history")
+    public List<String> readHistory(@RequestParam String fromDate, @RequestParam(required = false) String toDate)
+            throws IOException{
+        return historyService.readHistory(fromDate, toDate);
     }
 }
