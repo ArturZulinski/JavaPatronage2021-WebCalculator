@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 @RestController
@@ -18,76 +20,102 @@ public class CalculatorController {
     @Autowired
     private CalculatorService calculatorService;
 
-    @PostMapping("/operations/sum/number-number")
+    @PostMapping("/operations/add/number-number")
     @ApiOperation("Addition of 2 real numbers")
-    public double sum(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return calculatorService.sum(firstNumber, secondNumber);
+    public double addingTwoNumbers(@RequestParam double firstNumber,
+                                   @RequestParam double secondNumber){
+        return calculatorService.addingTwoNumbers(firstNumber, secondNumber);
     }
 
-    @PostMapping("/operations/sub/number-number")
+    @PostMapping("/operations/subtract/number-number")
     @ApiOperation("Subtraction of 2 Real Numbers")
-    public double sub(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return calculatorService.sub(firstNumber,secondNumber);
+    public double subtractTwoNumbers(@RequestParam double firstNumber,
+                                     @RequestParam double secondNumber){
+        return calculatorService.subtractTwoNumbers(firstNumber,secondNumber);
     }
 
-    @PostMapping("/operations/mul/number-number")
+    @PostMapping("/operations/multiply/number-number")
     @ApiOperation("Multiplication of 2 Real Numbers")
-    public double mul(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return calculatorService.mul(firstNumber,secondNumber);
+    public double multiplyTwoNumbers(@RequestParam double firstNumber,
+                                     @RequestParam double secondNumber){
+        return calculatorService.multiplyTwoNumbers(firstNumber,secondNumber);
     }
 
-    @PostMapping("/operations/div/number-number")
+    @PostMapping("/operations/divide/number-number")
     @ApiOperation("Division of 2 Real Numbers")
-    public ResponseEntity<Double> div(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return calculatorService.div(firstNumber,secondNumber);
+    public ResponseEntity<Double> divideTwoNumbers(@RequestParam double firstNumber,
+                                                   @RequestParam double secondNumber){
+        return calculatorService.divideTwoNumbers(firstNumber,secondNumber);
     }
 
-    @PostMapping("/operations/exp/number-number")
+    @PostMapping("/operations/exponentiation/number-number")
     @ApiOperation("Exponentiation of 2 Real Numbers")
-    public double exp(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return calculatorService.exp(firstNumber,secondNumber);
+    public double exponentiationNumber(@RequestParam double firstNumber,
+                                       @RequestParam double secondNumber){
+        return calculatorService.exponentiationNumber(firstNumber,secondNumber);
     }
 
     @PostMapping(value = "/operations/root/number-number", produces = {"application/json"})
     @ApiOperation("Root of 2 Real Numbers")
-    public ResponseEntity<Double> root(@RequestParam double firstNumber, @RequestParam double secondNumber) {
-        return calculatorService.root(firstNumber,secondNumber);
+    public ResponseEntity<Double> rootNumber(@RequestParam double firstNumber,
+                                             @RequestParam double secondNumber){
+        return calculatorService.rootNumber(firstNumber,secondNumber);
     }
 
-    @PostMapping(value = "/operations/mul/number-vector", produces = {"application/json"})
+    @PostMapping(value = "/operations/multiply/number-vector", produces = {"application/json"})
     @ApiOperation(value = "Multiplication of vector and number", notes = "This operation take 1 Real Number and 1 Vector " +
             "and multiply them together") // adding some extra notes
-    public ResponseEntity<Vector<Double>> mul(@RequestParam double number, @RequestParam double vector[]) {
-        return calculatorService.mul(number, vector);
+    public ResponseEntity<double[]> multiplyNumberAndVector(@RequestParam double number,
+                                                            @RequestParam double vector[]){
+        return calculatorService.multiplyNumberAndVector(number, vector);
     }
 
-    @PostMapping("/operations/mul/number-matrix")
+    @PostMapping("/operations/multiply/number-matrix")
     @ApiOperation("Multiplication of matrix and number")
-    public ResponseEntity<Vector<Vector<Double>>> mul(@RequestParam double number, @RequestParam double matrix[][]){
-        return calculatorService.mul(number,matrix);
+    public ResponseEntity<double[][]> multiplyMatrixByNumber(@RequestParam double number,
+                                                             @RequestBody double[][] matrix){
+        return calculatorService.multiplyMatrixByNumber(number,matrix);
     }
 
-    @PostMapping("/operations/sum/matrix-matrix")
+    @PostMapping("/operations/add/matrix-matrix")
     @ApiOperation("Adding 2 matrices")
-    public ResponseEntity<Vector<Vector<Double>>> sum(@RequestParam double firstMatrix[][], @RequestParam double secondMatrix[][]){
-        return calculatorService.sum(firstMatrix,secondMatrix);
+    public ResponseEntity<double[][]> addingTwoMatrices(@RequestBody double[][] firstMatrix,
+                                                        @RequestBody double[][] secondMatrix){
+        return calculatorService.addingTwoMatrices(firstMatrix,secondMatrix);
     }
 
-    @PostMapping("/operations/sub/matrix-matrix")
+    @PostMapping("/operations/subtract/matrix-matrix")
     @ApiOperation("Subtraction of 2 matrices")
-    public ResponseEntity<Vector<Vector<Double>>> sub(@RequestParam double firstMatrix[][], @RequestParam double secondMatrix[][]){
-        return calculatorService.sub(firstMatrix,secondMatrix);
+    public ResponseEntity<double[][]> subtractTwoMatrices(@RequestBody double firstMatrix[][],
+                                                          @RequestBody double secondMatrix[][]){
+        return calculatorService.subtractTwoMatrices(firstMatrix,secondMatrix);
     }
     @PostMapping("/operations/add/vector-vector")
     @ApiOperation("Adding 2 vectors together")
-    public ResponseEntity<Vector<Double>> add(@RequestParam double firstVector[],@RequestParam double secondVector[]){
-        return calculatorService.add(firstVector,secondVector);
+    public ResponseEntity<double[]> addingTwoVectors(@RequestParam double firstVector[],
+                                                     @RequestParam double secondVector[]) throws IOException {
+        return calculatorService.addingTwoVectors(firstVector,secondVector);
     }
 
-    @PostMapping("/operations/sub/vector-vector")
+    @PostMapping("/operations/subtract/vector-vector")
     @ApiOperation("Subtraction of 2 vectors")
-    public ResponseEntity<Vector<Double>> sub(@RequestParam double firstVector[],@RequestParam double secondVector[]){
-        return calculatorService.sub(firstVector,secondVector);
+    public ResponseEntity<double[]> subtractTwoVectors(@RequestParam double firstVector[],
+                                                       @RequestParam double secondVector[]){
+        return calculatorService.subtractTwoVectors(firstVector,secondVector);
+    }
+
+    @PostMapping("/operations/multiply/matrix-matrix")
+    @ApiOperation("Multiply 2 matrices")
+    public ResponseEntity<double[][]> multiplyMatrices(@RequestBody double[][] firstMatrix,
+                                                       @RequestBody double[][] secondMatrix){
+        return calculatorService.multiplyMatrices(firstMatrix,secondMatrix);
+    }
+
+    @PostMapping("/operations/multiply/matrix-vector")
+    @ApiOperation("Multiply matrix and vector")
+    public ResponseEntity<double[][]> multiplyMatrices(@RequestBody double[][] matrix,
+                                                       @RequestBody double[] vector){
+        return calculatorService.multiplyMatrixByVector(matrix,vector);
     }
 
     @GetMapping("/operations/instruction/")

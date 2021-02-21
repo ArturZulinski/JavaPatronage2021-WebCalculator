@@ -4,16 +4,15 @@ import com.patronage.calculator.entity.History;
 import com.patronage.calculator.repository.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Component
-@Service
-@ConditionalOnProperty(prefix = "", name = "H2_HISTORY_ENABLE", havingValue = "true")
+@Component
+@ConditionalOnProperty(name = "H2_HISTORY_ENABLE", havingValue = "true")
 public class DatabaseLogService implements HistoryInterface{
 
     @Autowired
@@ -32,11 +31,10 @@ public class DatabaseLogService implements HistoryInterface{
     public List<String> readHistory(String fromDate, String toDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime begin = LocalDateTime.parse(fromDate,formatter);
-        LocalDateTime end;
-        List<History> output = new ArrayList<>();
+        List<History> output;
         if(toDate!=null){
-            end = LocalDateTime.parse(toDate,formatter);
-            output.addAll(historyRepository.findByTimeOfLogBetween(begin,end));
+            LocalDateTime end = LocalDateTime.parse(toDate,formatter);
+            output = historyRepository.findByTimeOfLogBetween(begin,end);
         }
         else{
             output = historyRepository.findByTimeOfLogAfter(begin);
@@ -49,5 +47,10 @@ public class DatabaseLogService implements HistoryInterface{
         }
 
         return endResult;
+    }
+
+    @Override
+    public void clearHistory() {
+        historyRepository.deleteAll();
     }
 }

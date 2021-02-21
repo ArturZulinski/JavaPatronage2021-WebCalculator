@@ -9,4 +9,6 @@ public interface HistoryInterface {
 
     List<String> readHistory(String fromDate, String  toDate) throws IOException;
 
+    void clearHistory() throws IOException;
+
 }

@@ -2,7 +2,10 @@ package com.patronage.calculator.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
@@ -43,5 +46,10 @@ public class History {
 
     public void setMessageOfLog(String messageOfLog) {
         this.messageOfLog = messageOfLog;
+    }
+
+    @Override
+    public String toString() {
+        return timeOfLog + " " + messageOfLog + '\'';
     }
 }

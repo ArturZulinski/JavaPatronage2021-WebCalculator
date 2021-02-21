@@ -1,16 +1,14 @@
 package com.patronage.calculator.controler;
 
-import com.patronage.calculator.service.FileLogService;
 import com.patronage.calculator.service.HistoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -21,9 +19,9 @@ public class HistoryController {
     @Autowired
     private HistoryService historyService;
 
-    @GetMapping("/download/{filenane}")
-    @ApiOperation("Downloading {filename} file from local hard drive")
-    public ResponseEntity downloadFileFromLocal(@RequestParam String fileName) {
+    @GetMapping("/download/{fileName}")
+    @ApiOperation("Downloading {fileName} file from local hard drive")
+    public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) throws MalformedURLException {
         return historyService.downloadFileFromLocal(fileName);
     }
 
@@ -44,12 +42,6 @@ public class HistoryController {
     public List<String> readCurrentLog() throws IOException {
         return historyService.readCurrentLog();
     }
-
-//    @GetMapping("/read/history")
-//    @ApiOperation("Read {fileName} history file")
-//    public List<String> readHistoryLog(@RequestParam String fileName) throws IOException {
-//        return historyService.readHistoryLog(fileName);
-//    }
 
     @GetMapping("read/history")
     @ApiOperation("Read current history")

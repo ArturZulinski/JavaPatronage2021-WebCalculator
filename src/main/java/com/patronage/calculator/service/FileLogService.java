@@ -4,9 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,9 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Component
-@Service
-@ConditionalOnProperty(prefix = "",name = "H2_HISTORY_ENABLE", havingValue = "false", matchIfMissing = true)
+@Component
+@ConditionalOnProperty(name = "H2_HISTORY_ENABLE", havingValue = "false", matchIfMissing = true)
 public class FileLogService implements HistoryInterface{
 
     private static final Logger logger = LogManager.getLogger("toFile");
@@ -47,11 +46,26 @@ public class FileLogService implements HistoryInterface{
                 end = LocalDateTime.now();
             }
 
-            if((actualDateTime.isAfter(begin)) && ((end == null) || (actualDateTime.isBefore(end)))){
+            if((actualDateTime.isAfter(begin)) && (actualDateTime.isBefore(end))){
                 output.add(currentLine);
             }
         }
-
+        logger.info("Reading history from {} to {}", fromDate, toDate);
         return output;
+    }
+
+    @Override
+    public void clearHistory() throws IOException {
+        Path historyPath = Paths.get("logs\\");
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(historyPath)) {
+            for (Path path : stream) {
+                if(!Files.isDirectory(path) && !("operation_history.txt".equals(path.getFileName().toString()))){
+                    logger.info("The {} history file  deleted!",path);
+                    Files.deleteIfExists(path);
+                }
+            }
+        }
+        logger.info("All files deleted");
     }
 }

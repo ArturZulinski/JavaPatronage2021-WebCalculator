@@ -8,9 +8,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -29,15 +27,13 @@ public class HistoryService{
 
     private static final Logger logger = LogManager.getLogger(HistoryService.class);
 
-    public ResponseEntity downloadFileFromLocal(String fileName) {
+    public ResponseEntity downloadFileFromLocal(String fileName) throws MalformedURLException {
         Path path = Paths.get("logs\\" + fileName + ".txt");
-        Resource resource = null;
-        try {
-            resource = new UrlResource(path.toUri());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        logger.info("Downloading file with the given filename {}",fileName);
+        Resource resource = new UrlResource(path.toUri());
+
+        String message = String.format("Downloading file with the given filename %s",fileName);
+        historyInterface.saveHistory(message);
+        logger.info(message);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
@@ -56,42 +52,34 @@ public class HistoryService{
                 }
             }
         }
-        logger.info("Download list of history files");
+        String message = "Download list of history files";
+        historyInterface.saveHistory(message);
+        logger.info(message);
         return fileList;
     }
 
     public void deleteFileFromLocal() throws IOException {
-        Path historyPath = Paths.get("logs\\");
-
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(historyPath)) {
-            for (Path path : stream) {
-                if(!Files.isDirectory(path) && !("operation_history.txt".equals(path.getFileName().toString()))){
-                    logger.info("The {} history file  deleted!",path);
-                    Files.deleteIfExists(path);
-                }
-            }
-        }
-        logger.info("All files deleted");
+        String message = "History was deleted";
+        historyInterface.clearHistory();
+        historyInterface.saveHistory(message);
+        logger.info(message);
     }
 
     public List<String> readCurrentLog() throws IOException {
         Path historyPath = Paths.get("logs\\operation_history.txt");
-
         List<String> strings = Files.readAllLines(historyPath);
 
-        logger.info("Reading file with current operations");
-        return strings;
-    }
-
-    public List<String> readHistoryLog(String fileName) throws IOException {
-        Path path = Paths.get("logs\\" + fileName + ".txt");
-        List<String> strings = Files.readAllLines(path);
-
-        logger.info("Reading {} file with old operations", path);
+        String message = "Reading file with current operations";
+        historyInterface.saveHistory(message);
+        logger.info(message);
         return strings;
     }
 
     public List<String> readHistory(String fromDate, String toDate) throws IOException {
+                String message = String.format("Reading history between %s and %s", fromDate, toDate);
+                historyInterface.saveHistory(message);
+                logger.info(message);
+
                 return historyInterface.readHistory(fromDate, toDate);
     }
 }

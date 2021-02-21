@@ -4,7 +4,6 @@ import com.patronage.calculator.entity.History;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 

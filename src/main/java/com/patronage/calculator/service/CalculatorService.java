@@ -11,11 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 
 @Service
@@ -32,181 +36,250 @@ public class CalculatorService{
     @Autowired
     private HistoryInterface historyInterface;
 
-    public double sum(double firstNumber, double secondNumber) {
+    public double addingTwoNumbers(double firstNumber, double secondNumber) {
         double result = firstNumber + secondNumber;
-        String message = String.format("Perform adding operation %.2f + %.2f = %.2f", firstNumber, secondNumber, result);
-        historyInterface.saveHistory(message); //toFile or database
-        logger.info(message); // console
+        String message = String.format("Perform adding operation %.1f + %.1f = %.1f",firstNumber,secondNumber,result);
+        historyInterface.saveHistory(message);      //toFile or database
+        logger.info(message);                       // console
         return result;
     }
 
-    public double sub(double firstNumber, double secondNumber){
+    public double subtractTwoNumbers(double firstNumber, double secondNumber){
         double result = firstNumber - secondNumber;
-        logger.info("Performing subtraction {} - {} = {}",firstNumber,secondNumber,result);
+        String message = String.format("Performing subtraction %.1f - %.1f = %.1f",firstNumber,secondNumber,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
         return result;
     }
 
-    public double mul(double firstNumber, double secondNumber){
+    public double multiplyTwoNumbers(double firstNumber, double secondNumber){
         double result = firstNumber * secondNumber;
-        logger.info("Multiplying 2 numbers {} * {} = {}",firstNumber,secondNumber,result);
+        String message = String.format("Multiplying 2 numbers %.1f * %.1f = %.1f",firstNumber,secondNumber,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
         return result;
     }
 
-    public ResponseEntity<Double> div(double firstNumber, double secondNumber){
+    public ResponseEntity<Double> divideTwoNumbers(double firstNumber, double secondNumber){
         double result = firstNumber / secondNumber;
         if(secondNumber==0){
-            logger.info("You cannot divide by 0 !!!");
-            return new ResponseEntity("You cannot divide by 0 !!!", HttpStatus.BAD_REQUEST);
+            String message = "You cannot divide by 0 !!!";
+            historyInterface.saveHistory(message);
+            logger.info(message);
+            return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else {
-            logger.info("Dividing {} by {} gives {}", firstNumber, secondNumber, result);
+            String message = String.format("Dividing %.1f / %.1f = %.1f", firstNumber, secondNumber, result);
+            historyInterface.saveHistory(message);
+            logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
         }
     }
 
-    public double exp(double firstNumber, double secondNumber){
+    public double exponentiationNumber(double firstNumber, double secondNumber){
         double result = Math.pow(firstNumber,secondNumber);
-        logger.info("{} to power {} equals {}",firstNumber,secondNumber,result);
+        String message = String.format("%.1f to power %.1f equals %.1f",firstNumber,secondNumber,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
         return result;
     }
 
-    public ResponseEntity<Double> root(double firstNumber, double secondNumber){
+    public ResponseEntity<Double> rootNumber(double firstNumber, double secondNumber){
         double result = Math.pow(firstNumber,(1/secondNumber));
         if(secondNumber==0){
-            logger.info("You cannot root by 0 !!!");
-            return new ResponseEntity("You cannot root by 0 !!!", HttpStatus.BAD_REQUEST);
+            String message = "You cannot root by 0 !!!";
+            historyInterface.saveHistory(message);
+            logger.info(message);
+            return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else{
-            logger.info("{} root of {} equals {}",secondNumber,firstNumber,result);
+            String message = String.format("%.1f root of %.1f equals %.1f",secondNumber,firstNumber,result);
+            historyInterface.saveHistory(message);
+            logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
         }
     }
 
-    public ResponseEntity<Vector<Double>> mul(double number, double vector[]){
-        Vector<Double> result = new Vector<Double>();
+    public ResponseEntity<double[]> multiplyNumberAndVector(double number, double vector[]){
+        int sizeOfVector = vector.length;
+        double[] result = new double[sizeOfVector];
         if(vector.length <= vectorMaxLength){
             for (int i = 0; i < vector.length; i++) {
-                    result.addElement(number * vector[i]);
+                    result[i] = number * vector[i];
             }
+            String message = String.format("Perform multiplication operation {} * {} = {}",number,vector,result);
+            historyInterface.saveHistory(message);
+            logger.info(message);
+            return new ResponseEntity(result, HttpStatus.OK);
         }
         else{
-            logger.error("The value of Vector is to big!");
-            return new ResponseEntity("The value of Vector is too big!", HttpStatus.BAD_REQUEST);
+            String message = "The value of Vector is to big!";
+            historyInterface.saveHistory(message);
+            logger.error(message);
+            return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Perform mul operation {} * {} = {}",number,vector,result);
-        return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    public ResponseEntity<Vector<Double>> add(double firstVector[], double secondVector[]){
-        Vector<Double> result = new Vector<Double>();
-        if((firstVector.length <= vectorMaxLength) && (secondVector.length <= vectorMaxLength) &&
-                (firstVector.length==secondVector.length)){
-            for(int i =0; i <firstVector.length; i++) {
-                result.addElement(firstVector[i] + secondVector[i]);
+    public ResponseEntity<double[]> addingTwoVectors(double firstVector[], double secondVector[]){
+        int sizeOfVector = firstVector.length;
+        double[] result = new double[sizeOfVector];
+        if(firstVector.length!=secondVector.length){
+            String message = "The Vectors are not the same size!";
+            historyInterface.saveHistory(message);
+            logger.error(message);
+            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+        }
+        else if(firstVector.length > vectorMaxLength){
+            String message = "The first Vector is too big";
+            historyInterface.saveHistory(message);
+            logger.error(message);
+            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+        }
+        else if(secondVector.length > vectorMaxLength){
+            String message = "The second Vector is too big";
+            historyInterface.saveHistory(message);
+            logger.error(message);
+            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+        }
+        else{
+            for(int i=0;i<firstVector.length; i++){
+                result[i] = firstVector[i] + secondVector[i];
             }
+            String message = String.format("Perform multiplication operation {} * {} = {}",firstVector,secondVector,result);
+            historyInterface.saveHistory(message);
+            logger.info(message);
+            return new ResponseEntity<>(result,HttpStatus.OK);
         }
-        else if(firstVector.length != secondVector.length){
-            logger.error("The Vectors are different sizes!");
-            return new ResponseEntity("The Vectors are different sizes!", HttpStatus.BAD_REQUEST);
-        }
-        else if (firstVector.length > vectorMaxLength){
-            logger.error("The first Vector is too big!");
-            return new ResponseEntity("The first Vector is too big!", HttpStatus.BAD_REQUEST);
-        }
-        else if (secondVector.length > vectorMaxLength){
-            logger.error("The second Vector is too big!");
-            return new ResponseEntity("The second Vector is too big!", HttpStatus.BAD_REQUEST);
-        }
-        logger.info("Perform add operation {} + {} = {}",firstVector,secondVector,result);
-        return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    public ResponseEntity<Vector<Double>> sub(double firstVector[], double secondVector[]){
-        Vector<Double> result = new Vector<Double>();
-        if((firstVector.length <= vectorMaxLength ) && (secondVector.length <= vectorMaxLength) &&
-                (firstVector.length == secondVector.length)){
-            for(int i =0; i < firstVector.length; i++) {
-                result.addElement(firstVector[i] - secondVector[i]);
+    public ResponseEntity<double[]> subtractTwoVectors(double firstVector[], double secondVector[]){
+        int sizeOfVector = firstVector.length;
+        double[] result = new double[sizeOfVector];
+        if(firstVector.length!=secondVector.length){
+            String message = "The Vectors are not the same size!";
+            historyInterface.saveHistory(message);
+            logger.error(message);
+            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+        }
+        else if(firstVector.length > vectorMaxLength){
+            String message = "The first Vector is too big";
+            historyInterface.saveHistory(message);
+            logger.error(message);
+            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+        }
+        else if(secondVector.length > vectorMaxLength){
+            String message = "The second Vector is too big";
+            historyInterface.saveHistory(message);
+            logger.error(message);
+            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+        }
+        else{
+            for(int i=0;i<firstVector.length; i++){
+                result[i] = firstVector[i] - secondVector[i];
             }
+            String message = String.format("Perform multiplication operation {} * {} = {}",firstVector,secondVector,result);
+            historyInterface.saveHistory(message);
+            logger.info(message);
+            return new ResponseEntity<>(result,HttpStatus.OK);
         }
-        else if(firstVector.length != secondVector.length){
-            logger.error("The Vectors are different sizes!");
-            return new ResponseEntity("The Vectors are different sizes!", HttpStatus.BAD_REQUEST);
-        }
-        else if (firstVector.length > vectorMaxLength){
-            logger.error("The first Vector is too big!");
-            return new ResponseEntity("The first Vector is too big!", HttpStatus.BAD_REQUEST);
-        }
-        else if (secondVector.length > vectorMaxLength){
-            logger.error("The second Vector is too big!");
-            return new ResponseEntity("The second Vector is too big!", HttpStatus.BAD_REQUEST);
-        }
-        logger.info("Perform mul operation {} * {} = {}",firstVector,secondVector,result);
-        return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    //Works only good on paper. Have some problem inputting it in browser API
-    public ResponseEntity<Vector<Vector<Double>>> mul(double number, double matrix[][]) {
-        if((matrix.length <= matrixMaxCol) && (matrix[0].length <= matrixMaxRow)){
+    //Need to add Exceptions and errors
+    public ResponseEntity<double[][]> multiplyMatrixByNumber(double number, double[][] matrix) {
+        int sizeOfRow = matrix.length;
+        int sizeOfColumn = matrix[0].length;
+        double[][] result = new double[sizeOfRow][sizeOfColumn];
+        if ((matrix.length <= matrixMaxRow) && (matrix[0].length <= matrixMaxCol)) {
             for (int r = 0; r < matrix.length; r++) {
                 for (int c = 0; c < matrix[0].length; c++) {
-                        System.out.printf(" " + (number * matrix[r][c]) + "\t");
-                        matrix[r][c] = matrix[r][c] * number;
+                    result[r][c] = number * matrix[r][c];
                 }
-                System.out.println();
             }
-            logger.info("You successfully multiply matrix by number");
-            return new ResponseEntity(matrix, HttpStatus.OK);
         }
-        else{
-            logger.info("Either row or column of the matrix is to big!");
-            return new ResponseEntity("Either row or column of the matrix is to big!", HttpStatus.BAD_REQUEST);
-        }
+        String message = String.format("Successfully multiply number and matrix {} * {} = {}", number,matrix,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
+        return new ResponseEntity(result,HttpStatus.OK);
     }
 
-    //Works only good on paper. Have some problem inputting it in browser API
-    public ResponseEntity<Vector<Vector<Double>>> sum(double firstMatrix[][], double secondMatrix[][]) {
-        if((secondMatrix.length <= matrixMaxCol) && (secondMatrix[0].length <= matrixMaxRow) &&
-                (firstMatrix.length <= matrixMaxCol) && (firstMatrix[0].length <= matrixMaxRow)){
-            for (int r = 0; r < secondMatrix.length; r++) {
-                for (int c = 0; c < secondMatrix[0].length; c++) {
-                    System.out.printf(" " + (firstMatrix[r][c] + secondMatrix[r][c]) + "\t");
-                    secondMatrix[r][c] = secondMatrix[r][c] + firstMatrix[r][c];
+    //Need to add Exceptions and errors
+    public ResponseEntity<double[][]> addingTwoMatrices(double[][] firstMatrix, double[][] secondMatrix){
+        int sizeOfRow = firstMatrix.length;
+        int sizeOfColumn = firstMatrix[0].length;
+        double[][] result = new double[sizeOfRow][sizeOfColumn];
+        if ((firstMatrix.length <= matrixMaxRow) && (firstMatrix[0].length <= matrixMaxCol) &&
+                (firstMatrix.length == secondMatrix.length) && (firstMatrix[0].length == secondMatrix[0].length)) {
+            for (int r = 0; r < firstMatrix.length; r++) {
+                for (int c = 0; c < firstMatrix[0].length; c++) {
+                    result[r][c] = firstMatrix[r][c] + secondMatrix[r][c];
                 }
-                System.out.println();
             }
-            logger.info("You successfully add 2 matrices");
-            return new ResponseEntity(secondMatrix, HttpStatus.OK);
         }
-        else{
-            logger.info("Either row or column of one of the matrices is to big!");
-            return new ResponseEntity("Either row or column of the matrix is to big!", HttpStatus.BAD_REQUEST);
-        }
+        String message = String.format("Successfully multiply 2 matrices {} * {} = {}", firstMatrix,secondMatrix,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
+        return new ResponseEntity(result,HttpStatus.OK);
     }
 
-    //Works only good on paper. Have some problem inputting it in browser API
-    public ResponseEntity<Vector<Vector<Double>>> sub(double firstMatrix[][], double secondMatrix[][]) {
-        if((secondMatrix.length <= matrixMaxCol) && (secondMatrix[0].length <= matrixMaxRow) &&
-                (firstMatrix.length <= matrixMaxCol) && (firstMatrix[0].length <= matrixMaxRow)){
-            for (int r = 0; r < secondMatrix.length; r++) {
-                for (int c = 0; c < secondMatrix[0].length; c++) {
-                    System.out.printf(" " + (firstMatrix[r][c] - secondMatrix[r][c]) + "\t");
-                    secondMatrix[r][c] = secondMatrix[r][c] - firstMatrix[r][c];
+    //Need to add Exceptions and errors
+    public ResponseEntity<double[][]> subtractTwoMatrices(double firstMatrix[][], double secondMatrix[][]){
+        int sizeOfRow = firstMatrix.length;
+        int sizeOfColumn = firstMatrix[0].length;
+        double[][] result = new double[sizeOfRow][sizeOfColumn];
+        if ((firstMatrix.length <= matrixMaxRow) && (firstMatrix[0].length <= matrixMaxCol) &&
+                (firstMatrix.length == secondMatrix.length) && (firstMatrix[0].length == secondMatrix[0].length)) {
+            for (int r = 0; r < firstMatrix.length; r++) {
+                for (int c = 0; c < firstMatrix[0].length; c++) {
+                    result[r][c] = firstMatrix[r][c] - secondMatrix[r][c];
                 }
-                System.out.println();
             }
-            logger.info("You successfully subtract 2 matrices");
-            return new ResponseEntity(secondMatrix, HttpStatus.OK);
         }
-        else{
-            logger.info("Either row or column of one of the matrices is to big!");
-            return new ResponseEntity("Either row or column of the matrix is to big!", HttpStatus.BAD_REQUEST);
-        }
+        String message = String.format("Successfully subtract 2 matrices {} * {} = {}", firstMatrix,secondMatrix,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
+        return new ResponseEntity(result,HttpStatus.OK);
     }
 
-    //Multiplying matrix - matrix and matrix - vector not implemented. In future updates
+    //Need to add Exceptions and errors
+    public ResponseEntity<double[][]> multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
+        int sizeOfFirstMatrixRow = firstMatrix.length;
+        int sizeOfFirstMatrixColumn = firstMatrix[0].length;
+        int sizeOfSecondMatrixColumn = secondMatrix[0].length;
+        double[][] result = new double[sizeOfFirstMatrixRow][sizeOfSecondMatrixColumn];
+        for(int i = 0; i < firstMatrix.length; i++) {
+            for (int j = 0; j < secondMatrix[0].length; j++) {
+                for (int k = 0; k < firstMatrix.length; k++) {
+                    result[i][j] += firstMatrix[i][k] * secondMatrix[k][j];
+                }
+            }
+        }
+        String message = String.format("Successfully mutiply 2 matrices {} * {} = {}", firstMatrix,secondMatrix,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
+        return new ResponseEntity(result,HttpStatus.OK);
+    }
 
-    public ResponseEntity downloadFileFromLocal() {
+    //Need to add Exceptions and errors
+    public ResponseEntity<double[][]> multiplyMatrixByVector(double[][] matrix, double[] vector) {
+        int sizeOfFirstMatrixRow = matrix.length;
+        int sizeOfFirstMatrixColumn = matrix[0].length;
+        int sizeOfSecondMatrixColumn = vector.length;
+        double[][] result = new double[sizeOfFirstMatrixRow][sizeOfSecondMatrixColumn];
+        for(int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < vector.length; j++) {
+                for (int k = 0; k < matrix.length; k++) {
+                    result[i][j] += matrix[i][k] * vector[j];
+                }
+            }
+        }
+        String message = String.format("Successfully mutiply matrix by Vector {} * {} = {}", matrix,vector,result);
+        historyInterface.saveHistory(message);
+        logger.info(message);
+        return new ResponseEntity(result,HttpStatus.OK);
+    }
+
+
+    public ResponseEntity downloadFileFromLocal(){
         Path path = Paths.get("src\\main\\resources\\operations.txt");
         Resource resource = null;
         try {
