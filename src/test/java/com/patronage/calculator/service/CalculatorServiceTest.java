@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Vector;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -112,9 +113,7 @@ class CalculatorServiceTest {
         double[] inputVector = new double[]{1.0 ,2.0};
         ResponseEntity<double[]> result = calculatorService.multiplyNumberAndVector(2.0, inputVector);
 
-        Vector<Double> outputVector = new Vector<>(2);
-        outputVector.add(2.0);
-        outputVector.add(4.0);
+        double[] outputVector = {2.0, 4.0};
 
         assertThat(result.getBody()).isEqualTo(outputVector);
 
@@ -126,9 +125,7 @@ class CalculatorServiceTest {
         double[] inputVector = new double[]{1.0 ,2.0};
         ResponseEntity<double[]> result = calculatorService.multiplyNumberAndVector(2.0, inputVector);
 
-        Vector<Double> outputVector = new Vector<>(2);
-        outputVector.add(6.0);
-        outputVector.add(6.0);
+        double[] outputVector = {6.0, 6.0};
 
         assertThat(result.getBody()).isNotEqualTo(outputVector);
 
@@ -149,10 +146,7 @@ class CalculatorServiceTest {
         double[] inputVector2 = new double[]{3.0, 2.0, 1.0};
         ResponseEntity<double[]> result = calculatorService.addingTwoVectors(inputVector1,inputVector2);
 
-        Vector<Double> outputVector = new Vector<>(3);
-        outputVector.add(4.0);
-        outputVector.add(4.0);
-        outputVector.add(4.0);
+        double[] outputVector = {4.0 , 4.0 , 4.0};
 
         assertThat(result.getBody()).isEqualTo(outputVector);
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -165,10 +159,7 @@ class CalculatorServiceTest {
         double[] inputVector2 = new double[]{3.0, 2.0, 1.0};
         ResponseEntity<double[]> result = calculatorService.addingTwoVectors(inputVector1,inputVector2);
 
-        Vector<Double> outputVector = new Vector<>(3);
-        outputVector.add(5.0);
-        outputVector.add(5.0);
-        outputVector.add(5.0);
+        double[] outputVector = {5.0, 5.0, 5.0};
 
         assertThat(result.getBody()).isNotEqualTo(outputVector);
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
