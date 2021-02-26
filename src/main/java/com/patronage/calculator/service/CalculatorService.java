@@ -73,7 +73,7 @@ public class CalculatorService {
 
     public double exponentiationNumber(double firstNumber, double secondNumber) {
         double result = Math.pow(firstNumber, secondNumber);
-        String message = String.format("%.1f to power %.1f equals %.1f", firstNumber, secondNumber, result);
+        String message = String.format("%.1f to power %.1f  = %.1f", firstNumber, secondNumber, result);
         historyInterface.saveHistory(message);
         logger.info(message);
         return result;
@@ -87,7 +87,7 @@ public class CalculatorService {
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
-            String message = String.format("%.1f root of %.1f equals %.1f", secondNumber, firstNumber, result);
+            String message = String.format("%.1f root of %.1f  = %.1f", secondNumber, firstNumber, result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
