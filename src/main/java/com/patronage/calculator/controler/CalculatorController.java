@@ -1,5 +1,6 @@
 package com.patronage.calculator.controler;
 
+import com.patronage.calculator.controler.model.MatricesForm;
 import com.patronage.calculator.service.CalculatorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -79,16 +80,14 @@ public class CalculatorController {
 
     @PostMapping("/operations/add/matrix-matrix")
     @ApiOperation("Adding 2 matrices")
-    public ResponseEntity<double[][]> addingTwoMatrices(@RequestBody double[][] firstMatrix,
-                                                        @RequestBody double[][] secondMatrix){
-        return calculatorService.addingTwoMatrices(firstMatrix,secondMatrix);
+    public ResponseEntity<double[][]> addingTwoMatrices(@RequestBody MatricesForm matrixForm){
+        return calculatorService.addingTwoMatrices(matrixForm);
     }
 
     @PostMapping("/operations/subtract/matrix-matrix")
     @ApiOperation("Subtraction of 2 matrices")
-    public ResponseEntity<double[][]> subtractTwoMatrices(@RequestBody double firstMatrix[][],
-                                                          @RequestBody double secondMatrix[][]){
-        return calculatorService.subtractTwoMatrices(firstMatrix,secondMatrix);
+    public ResponseEntity<double[][]> subtractTwoMatrices(@RequestBody MatricesForm matricesForm){
+        return calculatorService.subtractTwoMatrices(matricesForm);
     }
     @PostMapping("/operations/add/vector-vector")
     @ApiOperation("Adding 2 vectors together")
@@ -106,15 +105,14 @@ public class CalculatorController {
 
     @PostMapping("/operations/multiply/matrix-matrix")
     @ApiOperation("Multiply 2 matrices")
-    public ResponseEntity<double[][]> multiplyMatrices(@RequestBody double[][] firstMatrix,
-                                                       @RequestBody double[][] secondMatrix){
-        return calculatorService.multiplyMatrices(firstMatrix,secondMatrix);
+    public ResponseEntity<double[][]> multiplyMatrices(@RequestBody MatricesForm matricesForm){
+        return calculatorService.multiplyMatrices(matricesForm);
     }
 
     @PostMapping("/operations/multiply/matrix-vector")
     @ApiOperation("Multiply matrix and vector")
     public ResponseEntity<double[][]> multiplyMatrices(@RequestBody double[][] matrix,
-                                                       @RequestBody double[] vector){
+                                                       @RequestParam double[] vector){
         return calculatorService.multiplyMatrixByVector(matrix,vector);
     }
 

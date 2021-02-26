@@ -1,5 +1,6 @@
 package com.patronage.calculator.service;
 
+import com.patronage.calculator.controler.model.MatricesForm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @Service
 public class CalculatorService {
@@ -99,7 +101,8 @@ public class CalculatorService {
             for (int i = 0; i < vector.length; i++) {
                 result[i] = number * vector[i];
             }
-            String message = String.format("Perform multiplication operation {} * {} = {}", number, vector, result);
+            String message = "Perform multiplication operation " + number +" * " + Arrays.toString(vector)
+                    + " = " + Arrays.toString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
@@ -133,7 +136,8 @@ public class CalculatorService {
             for (int i = 0; i < firstVector.length; i++) {
                 result[i] = firstVector[i] + secondVector[i];
             }
-            String message = String.format("Perform multiplication operation {} * {} = {}", firstVector, secondVector, result);
+            String message = "Perform multiplication operation " + Arrays.toString(firstVector) + " * "
+                    + Arrays.toString(secondVector) + " = " + Arrays.toString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -162,14 +166,14 @@ public class CalculatorService {
             for (int i = 0; i < firstVector.length; i++) {
                 result[i] = firstVector[i] - secondVector[i];
             }
-            String message = String.format("Perform multiplication operation {} * {} = {}", firstVector, secondVector, result);
+            String message = "Perform subtract operation " + Arrays.toString(firstVector) + " - "
+                    + Arrays.toString(secondVector) + " = " + Arrays.toString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
     }
 
-    //Need to add Exceptions and errors
     public ResponseEntity<double[][]> multiplyMatrixByNumber(double number, double[][] matrix) {
         int sizeOfRow = matrix.length;
         int sizeOfColumn = matrix[0].length;
@@ -190,7 +194,8 @@ public class CalculatorService {
                     result[r][c] = number * matrix[r][c];
                 }
             }
-            String message = String.format("Successfully multiply number and matrix {} * {} = {}", number, matrix, result);
+            String message = "Successfully multiply number and matrix " + number + " * " + Arrays.deepToString(matrix)
+                    + " = " + Arrays.deepToString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
@@ -198,144 +203,146 @@ public class CalculatorService {
 
     }
 
-    //Need to add Exceptions and errors
-    public ResponseEntity<double[][]> addingTwoMatrices(double[][] firstMatrix, double[][] secondMatrix) {
-        int sizeOfRow = firstMatrix.length;
-        int sizeOfColumn = firstMatrix[0].length;
+    public ResponseEntity<double[][]> addingTwoMatrices(MatricesForm matricesForm) {
+        int sizeOfRow = matricesForm.getFirstMatrix().length;
+        int sizeOfColumn = matricesForm.getFirstMatrix()[0].length;
         double[][] result = new double[sizeOfRow][sizeOfColumn];
-        if (firstMatrix.length > matrixMaxRow) {
+        if (matricesForm.getFirstMatrix().length > matrixMaxRow) {
             String message = "First matrix row is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (firstMatrix[0].length > matrixMaxCol) {
+        } else if (matricesForm.getFirstMatrix()[0].length > matrixMaxCol) {
             String message = "First matrix column is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (secondMatrix.length > matrixMaxRow) {
+        } else if (matricesForm.getSecondMatrix().length > matrixMaxRow) {
             String message = "Second matrix row is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (secondMatrix[0].length > matrixMaxCol) {
+        } else if (matricesForm.getSecondMatrix()[0].length > matrixMaxCol) {
             String message = "Second matrix column is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if ((firstMatrix.length != secondMatrix.length) || (firstMatrix[0].length != secondMatrix[0].length)) {
+        } else if ((matricesForm.getFirstMatrix().length != matricesForm.getSecondMatrix().length) ||
+                (matricesForm.getFirstMatrix()[0].length != matricesForm.getSecondMatrix()[0].length)) {
             String message = "The matrices are not the same size !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
-            for (int r = 0; r < firstMatrix.length; r++) {
-                for (int c = 0; c < firstMatrix[0].length; c++) {
-                    result[r][c] = firstMatrix[r][c] + secondMatrix[r][c];
+            for (int r = 0; r < matricesForm.getFirstMatrix().length; r++) {
+                for (int c = 0; c < matricesForm.getFirstMatrix()[0].length; c++) {
+                    result[r][c] = matricesForm.getFirstMatrix()[r][c] + matricesForm.getSecondMatrix()[r][c];
                 }
             }
-            String message = String.format("Successfully multiply 2 matrices {} * {} = {}", firstMatrix, secondMatrix, result);
+            String message = "Successfully add 2 matrices " + sizeOfRow + "x" + sizeOfColumn +
+                    ":" + Arrays.deepToString(matricesForm.getFirstMatrix()) + " + " +
+                    Arrays.deepToString(matricesForm.getSecondMatrix()) + " = " + Arrays.deepToString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
         }
     }
 
-    //Need to add Exceptions and errors
-    public ResponseEntity<double[][]> subtractTwoMatrices(double firstMatrix[][], double secondMatrix[][]) {
-        int sizeOfRow = firstMatrix.length;
-        int sizeOfColumn = firstMatrix[0].length;
+    public ResponseEntity<double[][]> subtractTwoMatrices(MatricesForm matricesForm){
+        int sizeOfRow = matricesForm.getFirstMatrix().length;
+        int sizeOfColumn = matricesForm.getFirstMatrix()[0].length;
         double[][] result = new double[sizeOfRow][sizeOfColumn];
-        if (firstMatrix.length > matrixMaxRow) {
+        if (matricesForm.getFirstMatrix().length > matrixMaxRow) {
             String message = "First matrix row is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (firstMatrix[0].length > matrixMaxCol) {
+        } else if (matricesForm.getFirstMatrix()[0].length > matrixMaxCol) {
             String message = "First matrix column is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (secondMatrix.length > matrixMaxRow) {
+        } else if (matricesForm.getSecondMatrix().length > matrixMaxRow) {
             String message = "Second matrix row is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (secondMatrix[0].length > matrixMaxCol) {
+        } else if (matricesForm.getSecondMatrix()[0].length > matrixMaxCol) {
             String message = "Second matrix column is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if ((firstMatrix.length != secondMatrix.length) || (firstMatrix[0].length != secondMatrix[0].length)) {
+        } else if ((matricesForm.getFirstMatrix().length != matricesForm.getSecondMatrix().length) ||
+                (matricesForm.getFirstMatrix()[0].length != matricesForm.getSecondMatrix()[0].length)) {
             String message = "The matrices are not the same size !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
-            for (int r = 0; r < firstMatrix.length; r++) {
-                for (int c = 0; c < firstMatrix[0].length; c++) {
-                    result[r][c] = firstMatrix[r][c] - secondMatrix[r][c];
+            for (int r = 0; r < matricesForm.getFirstMatrix().length; r++) {
+                for (int c = 0; c < matricesForm.getFirstMatrix()[0].length; c++) {
+                    result[r][c] = matricesForm.getFirstMatrix()[r][c] - matricesForm.getSecondMatrix()[r][c];
                 }
             }
-            String message = String.format("Successfully subtract 2 matrices {} * {} = {}", firstMatrix, secondMatrix, result);
+            String message = "Successfully subtract 2 matrices " + sizeOfRow + "x" + sizeOfColumn +
+                    ":" + Arrays.deepToString(matricesForm.getFirstMatrix()) + " + " +
+                    Arrays.deepToString(matricesForm.getSecondMatrix()) + " = " + Arrays.deepToString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
         }
     }
 
-    //Need to add Exceptions and errors
-    public ResponseEntity<double[][]> multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
-        int sizeOfFirstMatrixRow = firstMatrix.length;
-        int sizeOfFirstMatrixColumn = firstMatrix[0].length;
-        int sizeOfSecondMatrixColumn = secondMatrix[0].length;
+    public ResponseEntity<double[][]> multiplyMatrices(MatricesForm matricesForm) {
+        int sizeOfFirstMatrixRow = matricesForm.getFirstMatrix().length;
+        int sizeOfSecondMatrixColumn = matricesForm.getSecondMatrix()[0].length;
         double[][] result = new double[sizeOfFirstMatrixRow][sizeOfSecondMatrixColumn];
-        if (firstMatrix.length > matrixMaxRow) {
+        if (matricesForm.getFirstMatrix().length > matrixMaxRow) {
             String message = "First matrix row is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (firstMatrix[0].length > matrixMaxCol) {
+        } else if (matricesForm.getFirstMatrix()[0].length > matrixMaxCol) {
             String message = "First matrix column is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (secondMatrix.length > matrixMaxRow) {
+        } else if (matricesForm.getSecondMatrix().length > matrixMaxRow) {
             String message = "Second matrix row is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if (secondMatrix[0].length > matrixMaxCol) {
+        } else if (matricesForm.getSecondMatrix()[0].length > matrixMaxCol) {
             String message = "Second matrix column is too big !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
-        } else if ((firstMatrix.length != secondMatrix.length) || (firstMatrix[0].length != secondMatrix[0].length)) {
+        } else if ((matricesForm.getFirstMatrix().length != matricesForm.getSecondMatrix().length) || (matricesForm.getFirstMatrix()[0].length != matricesForm.getSecondMatrix()[0].length)) {
             String message = "The matrices are not the same size !";
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else {
-            for (int i = 0; i < firstMatrix.length; i++) {
-                for (int j = 0; j < secondMatrix[0].length; j++) {
-                    for (int k = 0; k < firstMatrix.length; k++) {
-                        result[i][j] += firstMatrix[i][k] * secondMatrix[k][j];
+            for (int i = 0; i < matricesForm.getFirstMatrix().length; i++) {
+                for (int j = 0; j < matricesForm.getSecondMatrix()[0].length; j++) {
+                    for (int k = 0; k < matricesForm.getFirstMatrix().length; k++) {
+                        result[i][j] += matricesForm.getFirstMatrix()[i][k] * matricesForm.getSecondMatrix()[k][j];
                     }
                 }
             }
-            String message = String.format("Successfully mutiply 2 matrices {} * {} = {}", firstMatrix, secondMatrix, result);
+            String message = "Successfully multiply 2 matrices " + sizeOfFirstMatrixRow + "x" + sizeOfSecondMatrixColumn +
+                    ":" + Arrays.deepToString(matricesForm.getFirstMatrix()) + " + " +
+                    Arrays.deepToString(matricesForm.getSecondMatrix()) + " = " + Arrays.deepToString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(result, HttpStatus.OK);
         }
     }
 
-    //Need to add Exceptions and errors
     public ResponseEntity<double[][]> multiplyMatrixByVector(double[][] matrix, double[] vector) {
         int sizeOfFirstMatrixRow = matrix.length;
         int sizeOfFirstMatrixColumn = matrix[0].length;
-        int sizeOfVector = vector.length;
         double[] result = new double[sizeOfFirstMatrixRow];
         if (matrix.length > matrixMaxRow) {
             String message = "Matrix row is too big !";
@@ -369,7 +376,8 @@ public class CalculatorService {
             }
             result[i] = sum;
         }
-            String message = String.format("Successfully mutiply matrix by Vector {} * {} = {}", matrix,vector,result);
+            String message = "Successfully multiply matrix by Vector " + Arrays.toString(vector) + "*" +
+                    Arrays.deepToString(matrix) + "=" + Arrays.toString(result);
             historyInterface.saveHistory(message);
             logger.info(message);
             return new ResponseEntity(result,HttpStatus.OK);
