@@ -22,8 +22,6 @@ import java.util.List;
 @Service
 public class HistoryService{
 
-    @Autowired
-    private HistoryInterface historyInterface;
 
     private static final Logger logger = LogManager.getLogger(HistoryService.class);
 
@@ -32,7 +30,7 @@ public class HistoryService{
         Resource resource = new UrlResource(path.toUri());
 
         String message = String.format("Downloading file with the given filename %s",fileName);
-        historyInterface.saveHistory(message);
+
         logger.info(message);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
@@ -53,33 +51,31 @@ public class HistoryService{
             }
         }
         String message = "Download list of history files";
-        historyInterface.saveHistory(message);
         logger.info(message);
         return fileList;
     }
 
     public void deleteFileFromLocal() throws IOException {
-        String message = "History was deleted";
-        historyInterface.clearHistory();
-        historyInterface.saveHistory(message);
-        logger.info(message);
+        Path historyPath = Paths.get("logs\\");
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(historyPath)) {
+            for (Path path : stream) {
+                if(!Files.isDirectory(path) && !("operation_history.txt".equals(path.getFileName().toString()))){
+                    logger.info("The {} history file  deleted!",path);
+                    Files.deleteIfExists(path);
+                }
+            }
+        }
+        logger.info("All files deleted");
     }
+
 
     public List<String> readCurrentLog() throws IOException {
         Path historyPath = Paths.get("logs\\operation_history.txt");
         List<String> strings = Files.readAllLines(historyPath);
 
         String message = "Reading file with current operations";
-        historyInterface.saveHistory(message);
         logger.info(message);
         return strings;
-    }
-
-    public List<String> readHistory(String fromDate, String toDate) throws IOException {
-                String message = String.format("Reading history between %s and %s", fromDate, toDate);
-                historyInterface.saveHistory(message);
-                logger.info(message);
-
-                return historyInterface.readHistory(fromDate, toDate);
     }
 }

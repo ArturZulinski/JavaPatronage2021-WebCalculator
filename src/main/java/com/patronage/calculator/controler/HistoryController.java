@@ -42,11 +42,4 @@ public class HistoryController {
     public List<String> readCurrentLog() throws IOException {
         return historyService.readCurrentLog();
     }
-
-    @GetMapping("read/history")
-    @ApiOperation("Read current history")
-    public List<String> readHistory(@RequestParam String fromDate, @RequestParam(required = false) String toDate)
-            throws IOException{
-        return historyService.readHistory(fromDate, toDate);
-    }
 }
