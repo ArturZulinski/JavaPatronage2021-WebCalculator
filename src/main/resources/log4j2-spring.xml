@@ -25,7 +25,6 @@
         <!-- LOG everything at INFO level -->
         <Root level="info">
             <AppenderRef ref="Console" />
-<!--            <AppenderRef ref="RollingFile" />-->
         </Root>
 
         <Logger name="toFile" level="info">

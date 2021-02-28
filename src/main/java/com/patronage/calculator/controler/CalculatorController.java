@@ -112,7 +112,7 @@ public class CalculatorController {
     @PostMapping("/operations/multiply/matrix-vector")
     @ApiOperation("Multiply matrix and vector")
     public ResponseEntity<double[][]> multiplyMatrices(@RequestBody double[][] matrix,
-                                                       @RequestParam double[] vector){
+                                                       @RequestParam double[] vector) throws Exception {
         return calculatorService.multiplyMatrixByVector(matrix,vector);
     }
 

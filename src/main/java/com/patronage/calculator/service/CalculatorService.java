@@ -61,7 +61,7 @@ public class CalculatorService {
         if (secondNumber == 0) {
             String message = "You cannot divide by 0 !!!";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
             String message = String.format("Dividing %.1f / %.1f = %.1f", firstNumber, secondNumber, result);
@@ -84,7 +84,7 @@ public class CalculatorService {
         if (secondNumber == 0) {
             String message = "You cannot root by 0 !!!";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
             String message = String.format("%.1f root of %.1f  = %.1f", secondNumber, firstNumber, result);
@@ -181,12 +181,12 @@ public class CalculatorService {
         if (matrix.length > matrixMaxRow) {
             String message = "Matrix row is too big!!";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matrix[0].length > matrixMaxCol) {
             String message = "Matrix column is too big!!";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
             for (int r = 0; r < matrix.length; r++) {
@@ -210,28 +210,28 @@ public class CalculatorService {
         if (matricesForm.getFirstMatrix().length > matrixMaxRow) {
             String message = "First matrix row is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getFirstMatrix()[0].length > matrixMaxCol) {
             String message = "First matrix column is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getSecondMatrix().length > matrixMaxRow) {
             String message = "Second matrix row is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getSecondMatrix()[0].length > matrixMaxCol) {
             String message = "Second matrix column is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if ((matricesForm.getFirstMatrix().length != matricesForm.getSecondMatrix().length) ||
                 (matricesForm.getFirstMatrix()[0].length != matricesForm.getSecondMatrix()[0].length)) {
             String message = "The matrices are not the same size !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
             for (int r = 0; r < matricesForm.getFirstMatrix().length; r++) {
@@ -255,28 +255,28 @@ public class CalculatorService {
         if (matricesForm.getFirstMatrix().length > matrixMaxRow) {
             String message = "First matrix row is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getFirstMatrix()[0].length > matrixMaxCol) {
             String message = "First matrix column is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getSecondMatrix().length > matrixMaxRow) {
             String message = "Second matrix row is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getSecondMatrix()[0].length > matrixMaxCol) {
             String message = "Second matrix column is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if ((matricesForm.getFirstMatrix().length != matricesForm.getSecondMatrix().length) ||
                 (matricesForm.getFirstMatrix()[0].length != matricesForm.getSecondMatrix()[0].length)) {
             String message = "The matrices are not the same size !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else {
             for (int r = 0; r < matricesForm.getFirstMatrix().length; r++) {
@@ -300,27 +300,27 @@ public class CalculatorService {
         if (matricesForm.getFirstMatrix().length > matrixMaxRow) {
             String message = "First matrix row is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getFirstMatrix()[0].length > matrixMaxCol) {
             String message = "First matrix column is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getSecondMatrix().length > matrixMaxRow) {
             String message = "Second matrix row is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if (matricesForm.getSecondMatrix()[0].length > matrixMaxCol) {
             String message = "Second matrix column is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         } else if ((matricesForm.getFirstMatrix().length != matricesForm.getSecondMatrix().length) || (matricesForm.getFirstMatrix()[0].length != matricesForm.getSecondMatrix()[0].length)) {
             String message = "The matrices are not the same size !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else {
@@ -347,25 +347,25 @@ public class CalculatorService {
         if (matrix.length > matrixMaxRow) {
             String message = "Matrix row is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else if (matrix[0].length > matrixMaxCol) {
             String message = "Matrix column is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else if (vector.length > vectorMaxLength) {
             String message = "Vector is too big !";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else if (vector.length != matrix.length) {
             String message = "Matrix and vector are different sizes!!";
             historyInterface.saveHistory(message);
-            logger.info(message);
+            logger.error(message);
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
         else{
