@@ -54,8 +54,8 @@ Użytkownik ma również możliwość:
 
 ## Baza danych
 
-Program korzysta rówmież z bazy danych H2. Aby z niej należy ustawić parametr H2_HISTORY_ENABLE na true w pliku application.properties, a następnie skorzystać z poniższego linku w przeglądarce:
-<app_url> = http://localhost:8080/h2-console/<br/>
+Program korzysta rówmież z bazy danych H2. Aby jej użyć należy ustawić parametr H2_HISTORY_ENABLE na true w pliku application.properties, a następnie skorzystać z poniższego linku w przeglądarce:
+http://localhost:8080/h2-console/<br/>
 
 Do zalogowanie potrzebne są defaultowe dane:
 - JDBC URL: jdbc:h2:mem:testdb
