@@ -1,5 +1,9 @@
 package com.patronage.calculator.service;
 
+import com.patronage.calculator.exception.ApiException;
+
+import com.patronage.calculator.exception.ApiExceptionHandler;
+import com.patronage.calculator.exception.ApiRequestsException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Vector;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class CalculatorServiceTest {
@@ -70,10 +74,16 @@ class CalculatorServiceTest {
         assertThat(result.getBody()).isNotEqualTo(3.0);
     }
 
-    @Test
-    void shouldNotDivideByZero(){
-        ResponseEntity result = calculatorService.divideTwoNumbers(4.0,0.0);
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    @Test()
+    public void shouldNotDivideByZero(){
+        Exception exception = assertThrows(ApiRequestsException.class, () -> {
+            calculatorService.divideTwoNumbers(4.0,0.0);
+        });
+
+        String expectedMessage = "You cannot divide by 0 !!!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
@@ -104,8 +114,14 @@ class CalculatorServiceTest {
 
     @Test
     void shouldNotRootByZero(){
-        ResponseEntity result = calculatorService.rootNumber(9.0,0.0);
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Exception exception = assertThrows(ApiRequestsException.class, () -> {
+            calculatorService.rootNumber(9.0,0.0);
+        });
+
+        String expectedMessage = "You cannot root by 0 !!!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
@@ -134,10 +150,15 @@ class CalculatorServiceTest {
 
     @Test
     void wrongSizeOfVector() {
+        Exception exception = assertThrows(ApiRequestsException.class, () -> {
         double[] inputVector = new double[]{1.0 ,3.0,5.0, 4.0, 8.0};
-        ResponseEntity<double[]> result = calculatorService.multiplyNumberAndVector(2.0, inputVector);
+        calculatorService.multiplyNumberAndVector(2.0, inputVector);
+        });
 
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        String expectedMessage = "The value of Vector is to big!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
@@ -167,11 +188,16 @@ class CalculatorServiceTest {
 
     @Test
     void wrongSizeOfOneOfTheVectors() throws IOException {
+        Exception exception = assertThrows(ApiRequestsException.class, () -> {
         double[] inputVector1 = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
         double[] inputVector2 = new double[]{3.0, 2.0, 1.0};
-        ResponseEntity<double[]> result = calculatorService.addingTwoVectors(inputVector1, inputVector2);
+        calculatorService.addingTwoVectors(inputVector1, inputVector2);
+        });
 
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        String expectedMessage = "The Vectors are not the same size!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
 }
