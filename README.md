@@ -4,15 +4,15 @@ Program wykonujący proste obliczenia matematyczne, których podstawą mogą by�
 Możliwość przeglądania oraz dokonywania obliczeń za pomocą przeglądarki na porcie 8080:
 http://localhost:8080/
 
-Link do dokumentacji Swagger: http://localhost:8080/swagger-ui.html<br />
+Link do dokumentacji Swagger: http://localhost:8080/swagger-ui.html
 
 Link do konsoli bazy danych H2: http://localhost:8080/h2-console
 
 ## Uruchomienie aplikacji
 
 Do uruchomienia aplikacji potrzebne są:
-- Java
-- Maven
+- Java version 15.0.1
+- Maven version 3.6.3
 - InteliJ IDEA Community Edition
 - (opcjonalnie) Postman
 
@@ -39,6 +39,9 @@ Program wykonuje następujące funkcje matematyczne:
     -   Pomnożyć je ze sobą      
 - Wybierając macierz oraz wektor użytkownik może pomnożyć je ze sobą
 
+Wszystkie wyżej wymienione operacje można również pobrać w formie pliku txt używając linka:
+http://localhost:8080/calculator/operations/instruction/
+
 ## Funkcje dodatkowe
 
 Program zapisuje również historię wykonywanych operacji w plikach tekstowych (operation_history.txt).
@@ -51,7 +54,7 @@ Użytkownik ma również możliwość:
 
 ## Baza danych
 
-Program korzysta rówmież z bazy danych H2. Aby z niej skorzystać należy użyć poniższego linku w przeglądarce:
+Program korzysta rówmież z bazy danych H2. Aby z niej należy ustawić parametr H2_HISTORY_ENABLE na true w pliku application.properties, a następnie skorzystać z poniższego linku w przeglądarce:
 <app_url> = http://localhost:8080/h2-console/<br/>
 
 Do zalogowanie potrzebne są defaultowe dane:
